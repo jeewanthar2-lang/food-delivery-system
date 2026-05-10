@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Manage Restaurants - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container py-5">
+  <h2>🏪 All Restaurants</h2>
+  <table class="table bg-white rounded mt-3">
+    <thead><tr><th>ID</th><th>Name</th><th>City</th><th>Cuisine</th><th>Owner</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr th:each="r : ${restaurants}">
+        <td th:text="${r.id}"></td><td th:text="${r.name}"></td>
+        <td th:text="${r.city}"></td><td th:text="${r.cuisine}"></td><td th:text="${r.ownerId}"></td>
+        <td>
+          <form method="post" th:action="@{'/admin/restaurants/delete/' + ${r.id}}" data-confirm="Delete restaurant?">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

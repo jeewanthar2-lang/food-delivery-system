@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Edit Review - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="auth-card">
+    <h3>✏️ Edit your review</h3>
+    <p class="text-muted" th:if="${restaurant != null}">From <strong th:text="${restaurant.name}"></strong></p>
+    <form method="post" th:action="@{'/review/edit/' + ${review.id}}">
+        <div class="mb-3"><label>Rating (1-5)</label>
+            <select class="form-select" name="rating">
+                <option th:each="i : ${#numbers.sequence(5,1)}"
+                        th:value="${i}"
+                        th:text="${'★'.repeat(i)} + ' (' + ${i} + ')'"
+                        th:selected="${i == review.rating}"></option>
+            </select>
+        </div>
+        <div class="mb-3"><label>Comment</label>
+            <textarea class="form-control" name="comment" rows="3" required th:text="${review.comment}"></textarea>
+        </div>
+        <button class="btn btn-brand w-100">Update Review</button>
+    </form>
+</div>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

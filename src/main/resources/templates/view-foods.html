@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Browse Foods - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container py-5">
+  <div th:if="${msg}" class="alert alert-success py-2 d-flex justify-content-between align-items-center gap-2">
+    <span th:text="${msg}">Added to cart</span>
+    <a th:href="@{/cart}" class="btn btn-sm btn-dark rounded-pill">View Cart →</a>
+  </div>
+
+  <div th:if="${restaurant != null}" class="mb-4">
+    <h2 th:text="${restaurant.name} + ' — ' + ${restaurant.city}">Restaurant</h2>
+    <p class="text-muted" th:text="${restaurant.description}">desc</p>
+    <span class="badge-cuisine" th:text="${restaurant.cuisine}">cuisine</span>
+  </div>
+  <div th:if="${restaurant == null}">
+    <h2 class="mb-3">🍽️ All Foods</h2>
+    <form class="mb-4" th:action="@{/foods}" method="get">
+      <div class="input-group">
+        <input class="form-control" name="q" th:value="${q}" placeholder="🔍 Search...">
+        <button class="btn btn-brand">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-4" th:each="f : ${foods}">
+      <div class="card-food h-100">
+        <img class="card-img-top" th:src="${f.image != null and !f.image.isEmpty()} ? @{'/uploads/' + ${f.image}} : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600'">
+        <div class="card-body">
+          <span class="badge-cuisine" th:text="${f.category}">cat</span>
+          <h5 class="mt-2 mb-1" th:text="${f.name}">name</h5>
+          <p class="text-muted small mb-2" th:text="${f.description}">desc</p>
+          <p class="fw-bold mb-2">Rs. <span th:text="${#numbers.formatDecimal(f.price,1,2)}">0</span></p>
+          <p class="small text-muted" th:if="${restaurantService != null and restaurant == null}">
+            🏪 <span th:text="${restaurantService.byId(f.restaurantId) != null} ? ${restaurantService.byId(f.restaurantId).name} : ''">resto</span>
+          </p>
+          <form th:action="@{/cart/add}" method="post" th:if="${session.user != null and session.user.role == 'CUSTOMER'}">
+            <input type="hidden" name="foodId" th:value="${f.id}">
+            <div class="input-group input-group-sm mb-2" style="max-width:160px">
+              <button type="button" class="btn btn-outline-secondary" data-qty-btn="-1" th:attr="data-qty-target='#q' + ${f.id}">−</button>
+              <input class="form-control text-center" type="number" name="qty" value="1" min="1" th:id="'q' + ${f.id}">
+              <button type="button" class="btn btn-outline-secondary" data-qty-btn="1" th:attr="data-qty-target='#q' + ${f.id}">+</button>
+            </div>
+            <button class="btn btn-brand btn-sm w-100">Add to Cart 🛒</button>
+            <button type="submit" th:formaction="@{/order/buy-now}" class="btn btn-outline-brand btn-sm w-100 mt-2">Buy Now ⚡</button>
+
+          </form>
+          <a th:if="${session.user == null}" th:href="@{/login}" class="btn btn-outline-brand btn-sm">Login to order</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 empty" th:if="${#lists.isEmpty(foods)}">
+      <div class="emoji">🍽️</div><p>No foods found.</p>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

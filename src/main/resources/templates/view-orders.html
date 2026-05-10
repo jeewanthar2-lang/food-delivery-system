@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('My Orders - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container py-5">
+  <h2 class="mb-4">📦 Order History</h2>
+  <div th:if="${placed}" class="alert alert-success">
+    🎉 Order placed successfully! ID: <strong th:text="${placed}"></strong>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(orders)}"><div class="emoji">📭</div><p>No orders yet.</p></div>
+  <div class="dash-card mb-3" th:each="o : ${orders}">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+      <div>
+        <h6 class="mb-1">Order #<span th:text="${o.id}"></span></h6>
+        <p class="mb-1 small text-muted" th:text="${o.createdAt}"></p>
+        <p class="mb-1" th:text="${o.items}"></p>
+        <small>📍 Delivery: <span th:text="${o.address}"></span>, <span th:text="${o.city}"></span></small><br>
+        <small th:if="${restaurantService != null and restaurantService.byId(o.restaurantId) != null}">
+          🏪 Store: <span th:text="${restaurantService.byId(o.restaurantId).name}"></span>
+        </small>
+      </div>
+      <div class="text-end">
+        <span class="status" th:classappend="${'status-' + o.status}" th:text="${o.status}"></span>
+        <p class="mt-2 mb-0">Subtotal: Rs. <span th:text="${#numbers.formatDecimal(o.subtotal,1,2)}"></span></p>
+        <p class="mb-0 small text-muted">+ Delivery: Rs. <span th:text="${#numbers.formatDecimal(o.deliveryFee,1,2)}"></span></p>
+        <p class="fw-bold">Total: Rs. <span th:text="${#numbers.formatDecimal(o.total,1,2)}"></span></p>
+        <a th:if="${o.status == 'DELIVERED'}" th:href="@{'/review/add/' + ${o.id}}" class="btn btn-sm btn-brand">⭐ Add Review</a>
+      </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+      <div class="col-md-6">
+        <label class="small text-muted">Delivery location</label>
+        <iframe class="w-100 rounded" style="height:190px;border:0" loading="lazy" th:src="${o.customerMapEmbedUrl}"></iframe>
+      </div>
+      <div class="col-md-6" th:if="${o.hasRestaurantLocation()}">
+        <label class="small text-muted">Store → delivery route</label>
+        <iframe class="w-100 rounded" style="height:190px;border:0" loading="lazy" th:src="${o.routeEmbedUrl}"></iframe>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap gap-2 mt-2">
+      <a target="_blank" class="btn btn-outline-secondary btn-sm" th:href="${o.customerGoogleMapsUrl}">Open delivery map ↗</a>
+      <a target="_blank" class="btn btn-outline-brand btn-sm" th:if="${o.hasRestaurantLocation()}" th:href="${o.directionsUrl}">Open automatic route ↗</a>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Manage Orders - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container py-5">
+  <h2>📦 All Orders</h2>
+  <table class="table bg-white rounded mt-3">
+    <thead><tr><th>ID</th><th>Customer</th><th>Restaurant</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr th:each="o : ${orders}">
+        <td th:text="${o.id}"></td><td th:text="${o.customerId}"></td>
+        <td th:text="${restaurantService.byId(o.restaurantId) != null} ? ${restaurantService.byId(o.restaurantId).name} : ''"></td>
+        <td><small th:text="${o.items}"></small></td>
+        <td>Rs. <span th:text="${#numbers.formatDecimal(o.total,1,2)}"></span></td>
+        <td><span class="status" th:classappend="${'status-' + o.status}" th:text="${o.status}"></span></td>
+        <td>
+          <form method="post" th:action="@{'/admin/orders/delete/' + ${o.id}}" data-confirm="Delete order?">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

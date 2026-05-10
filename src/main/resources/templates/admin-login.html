@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Admin Login - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="auth-card">
+  <h2 class="text-center mb-1">🔐 Admin Login</h2>
+  <p class="text-center text-muted">Restricted area</p>
+  <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+  <form method="post" th:action="@{/admin-login}">
+    <div class="mb-3"><label class="form-label">Admin Email</label>
+      <input class="form-control" type="email" name="email" value="admin@foodiego.com" required></div>
+    <div class="mb-3"><label class="form-label">Password</label>
+      <input class="form-control" type="password" name="password" required></div>
+    <button class="btn btn-brand w-100">Login as Admin</button>
+  </form>
+  <p class="text-center mt-3 small text-muted">Default: admin@foodiego.com / admin123</p>
+</div>
+
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

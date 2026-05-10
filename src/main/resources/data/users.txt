@@ -1,0 +1,4 @@
+U-ADMIN|Admin|admin@foodiego.com|admin123|0000000000|ADMIN|HQ|
+U-OWNER1|Mario Rossi|mario@pizza.com|mario123|0771234567|OWNER|Colombo|
+U-RIDER1|Kasun Perera|kasun@ride.com|kasun123|0779876543|RIDER|Colombo|Bike
+U-CUST1|Nimal Silva|nimal@mail.com|nimal123|0712345678|CUSTOMER||

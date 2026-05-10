@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Customer Dashboard - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container py-5">
+  <h2 class="mb-1">Hi, <span th:text="${session.user.name}">Customer</span> 👋</h2>
+  <p class="text-muted">What are you craving today?</p>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="dash-card"><div class="dash-label">Cart</div><div class="dash-stat" th:text="${cartCount}">0</div><a th:href="@{/cart}" class="small">View cart →</a></div></div>
+    <div class="col-md-3"><div class="dash-card"><div class="dash-label">Orders</div><div class="dash-stat" th:text="${#lists.size(orders)}">0</div><a th:href="@{/customer/orders}" class="small">Order history →</a></div></div>
+    <div class="col-md-3"><div class="dash-card"><div class="dash-label">Reviews</div><div class="dash-stat" th:text="${#lists.size(reviews)}">0</div><a th:href="@{/reviews}" class="small">My reviews →</a></div></div>
+    <div class="col-md-3"><div class="dash-card"><div class="dash-label">Profile</div><div class="dash-stat">⚙️</div><a th:href="@{/profile}" class="small">Edit profile →</a></div></div>
+  </div>
+
+  <h4 class="section-title mt-5"><small>Restaurants</small>Order from your favourites</h4>
+  <form class="mb-4" th:action="@{/foods}" method="get">
+    <div class="input-group">
+      <input class="form-control" name="q" placeholder="🔍 Search foods (pizza, burger, sushi...)">
+      <button class="btn btn-brand">Search</button>
+    </div>
+  </form>
+
+  <div class="row g-4">
+    <div class="col-md-4" th:each="r : ${restaurants}">
+      <div class="card-rest h-100">
+        <img class="card-img-top" th:src="${r.image != null and !r.image.isEmpty()} ? @{'/uploads/' + ${r.image}} : 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600'">
+        <div class="card-body">
+          <span class="badge-cuisine" th:text="${r.cuisine}">Cuisine</span>
+          <h5 class="mt-2 mb-1" th:text="${r.name}">Name</h5>
+          <p class="text-muted small">📍 <span th:text="${r.city}">City</span></p>
+          <a th:href="@{/foods(restaurantId=${r.id})}" class="btn btn-brand btn-sm">View Menu</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 empty" th:if="${#lists.isEmpty(restaurants)}">
+      <div class="emoji">🥘</div><p>No restaurants yet — check back soon!</p>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

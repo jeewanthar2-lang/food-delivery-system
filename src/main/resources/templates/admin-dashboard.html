@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Admin Dashboard - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container py-5">
+  <h2 class="mb-1">🛡️ Admin Dashboard</h2>
+  <p class="text-muted">Full system overview</p>
+  <div class="row g-3 my-3">
+    <div class="col-md-2"><div class="dash-card"><div class="dash-label">Users</div><div class="dash-stat" th:text="${usersCount}">0</div><a th:href="@{/admin/users}" class="small">Manage →</a></div></div>
+    <div class="col-md-2"><div class="dash-card"><div class="dash-label">Restaurants</div><div class="dash-stat" th:text="${restaurantsCount}">0</div><a th:href="@{/admin/restaurants}" class="small">View →</a></div></div>
+    <div class="col-md-2"><div class="dash-card"><div class="dash-label">Foods</div><div class="dash-stat" th:text="${foodsCount}">0</div><a th:href="@{/foods}" class="small">View →</a></div></div>
+    <div class="col-md-2"><div class="dash-card"><div class="dash-label">Orders</div><div class="dash-stat" th:text="${ordersCount}">0</div><a th:href="@{/admin/orders}" class="small">View →</a></div></div>
+    <div class="col-md-2"><div class="dash-card"><div class="dash-label">Reviews</div><div class="dash-stat" th:text="${reviewsCount}">0</div><a th:href="@{/reviews}" class="small">View →</a></div></div>
+    <div class="col-md-2"><div class="dash-card"><div class="dash-label">Payments</div><div class="dash-stat" th:text="${paymentsCount}">0</div></div></div>
+  </div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

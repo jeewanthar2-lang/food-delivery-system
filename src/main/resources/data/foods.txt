@@ -1,0 +1,3 @@
+F-1|R-1|Margherita Pizza|Pizza|1500.00||Classic tomato, mozzarella, basil
+F-2|R-1|Pepperoni Pizza|Pizza|1800.00||Loaded with spicy pepperoni
+F-3|R-1|Spaghetti Bolognese|Pasta|1200.00||Slow-cooked beef ragu

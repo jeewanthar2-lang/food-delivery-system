@@ -1,0 +1,7 @@
+U-ADMIN|Admin|admin@foodiego.com|admin123|0000000000|ADMIN|HQ|
+U-1778310116192458|saman|saman@gmail.com|Saman123|0712545789|CUSTOMER||
+U-1778310148683549|Dumi Foods|duminda@gmail.com|Duminda123|0716566|OWNER|kurunegala|
+U-177831026991823|alan|alan1@gmail.com|Alan1|0166116|RIDER|kurunegala|Bike
+U-1778315109969840|efg|efg@gmail.com|1234|0754247552|CUSTOMER||
+U-1778315128020570|ffgf|abc@gmail.com|1234|0759463535|RIDER|Kurunegala|Bike
+U-1778379015542814|Sachi Cake|sachini1@gmail.com|Sachini1|0166116|OWNER|rathnapura|

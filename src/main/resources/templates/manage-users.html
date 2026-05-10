@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Manage Users - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container py-5">
+  <h2>👥 Manage Users</h2>
+  <table class="table bg-white rounded mt-3">
+    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>City</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr th:each="u : ${users}">
+        <td th:text="${u.id}"></td><td th:text="${u.name}"></td><td th:text="${u.email}"></td>
+        <td><span class="badge-cuisine" th:text="${u.role}"></span></td><td th:text="${u.city}"></td>
+        <td>
+          <form th:if="${u.role != 'ADMIN'}" method="post" th:action="@{'/admin/users/delete/' + ${u.id}}" data-confirm="Delete this user?">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

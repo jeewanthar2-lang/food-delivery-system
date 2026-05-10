@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Cart - FoodieGo')}"></head>
+<style>
+  body.cart-page{background:#f7f5f0;color:#111;}
+  .cart-shell{background:#f7f5f0;min-height:calc(100vh - 76px);padding:32px 0 56px;}
+  .cart-breadcrumb{font-size:.78rem;color:#777;margin-bottom:8px;}
+  .cart-title{font-weight:300;letter-spacing:4px;text-transform:uppercase;margin-bottom:24px;}
+  .cart-panel{background:#fff;border:1px solid #ece9e1;border-radius:18px;box-shadow:0 14px 35px rgba(0,0,0,.04);}
+  .cart-line{padding:18px;border-bottom:1px solid #eee;}
+  .cart-line:last-child{border-bottom:0;}
+  .cart-img{width:82px;height:82px;object-fit:cover;border-radius:10px;background:#f2f2f2;}
+  .cart-food-name{font-size:1rem;font-weight:700;color:#111;}
+  .cart-meta{font-size:.78rem;color:#555;line-height:1.45;}
+  .cart-price{font-size:1.25rem;font-weight:800;color:#111;}
+  .cart-qty{display:inline-flex;align-items:center;gap:16px;background:#fff;border-radius:999px;padding:4px 12px;box-shadow:0 6px 18px rgba(0,0,0,.04);}
+  .cart-qty button{border:0;background:transparent;color:#111;font-size:1.25rem;line-height:1;min-width:24px;}
+  .cart-remove{border:0;background:transparent;color:#ef3b3b;font-size:1.25rem;}
+  .summary-panel{padding:22px;}
+  .summary-title{font-weight:800;margin-bottom:18px;}
+  .summary-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;color:#606060;}
+  .summary-row strong{color:#111;}
+  .summary-total{font-size:1.25rem;color:#111;}
+  .promo-input{border:0;background:#fbfbfb;border-radius:999px;padding:10px 14px;font-size:.85rem;}
+  .checkout-btn{background:#000;color:#fff;border:0;border-radius:999px;padding:12px 20px;font-weight:700;width:100%;}
+  .checkout-btn:hover{color:#fff;background:#222;}
+  .back-link{color:#111;text-decoration:none;}
+</style>
+<body class="cart-page">
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="cart-shell">
+  <div class="container">
+    <div class="cart-breadcrumb"><a th:href="@{/}" class="back-link">Home</a> &gt; Cart</div>
+    <h2 class="cart-title">Your Cart</h2>
+
+    <div class="empty cart-panel" th:if="${#lists.isEmpty(items)}">
+      <div class="emoji">🛒</div>
+      <p>Your cart is empty.</p>
+      <a th:href="@{/foods}" class="btn btn-brand">Browse Foods</a>
+    </div>
+
+    <div class="row g-4" th:if="${not #lists.isEmpty(items)}">
+      <div class="col-lg-7">
+        <div class="cart-panel">
+          <div class="cart-line" th:each="c : ${items}" th:with="food=${foodService.byId(c.foodId)}">
+            <div class="d-flex align-items-center gap-3">
+              <img class="cart-img" th:src="${food != null and food.image != null and !food.image.isEmpty()} ? @{'/uploads/' + ${food.image}} : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300'" alt="Food">
+              <div class="flex-grow-1">
+                <div class="cart-food-name" th:text="${c.foodName}">Food name</div>
+                <div class="cart-meta">Restaurant: <span th:text="${restaurantService.byId(c.restaurantId) != null} ? ${restaurantService.byId(c.restaurantId).name} : 'Restaurant'"></span></div>
+                <div class="cart-meta">Unit price: Rs. <span th:text="${#numbers.formatDecimal(c.price,1,2)}">0</span></div>
+                <div class="cart-price mt-2">Rs. <span th:text="${#numbers.formatDecimal(c.subtotal,1,2)}">0</span></div>
+              </div>
+              <div class="text-end d-flex flex-column align-items-end gap-3">
+                <form th:action="@{'/cart/remove/' + ${c.id}}" method="post" data-confirm="Remove item?">
+                  <button class="cart-remove" title="Remove">🗑</button>
+                </form>
+                <form th:action="@{'/cart/update/' + ${c.id}}" method="post" class="cart-qty">
+                  <button type="submit" name="qty" th:value="${c.quantity - 1}">−</button>
+                  <strong th:text="${c.quantity}">1</strong>
+                  <button type="submit" name="qty" th:value="${c.quantity + 1}">+</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="cart-panel summary-panel sticky-lg-top" style="top:92px">
+          <h5 class="summary-title">Order Summary</h5>
+          <div class="summary-row"><span>Subtotal</span><strong>Rs. <span th:text="${#numbers.formatDecimal(subtotal,1,2)}">0</span></strong></div>
+          <div class="summary-row"><span>Discount</span><strong>Rs. 0.00</strong></div>
+          <div class="summary-row"><span>Delivery Fee</span><strong>Rs. <span th:text="${#numbers.formatDecimal(deliveryFee,1,2)}">0</span></strong></div>
+          <hr>
+          <div class="summary-row summary-total"><span>Total</span><strong>Rs. <span th:text="${#numbers.formatDecimal(total,1,2)}">0</span></strong></div>
+          <div class="d-flex gap-2 my-3">
+            <input class="promo-input flex-grow-1" placeholder="🏷 Add promo code" disabled>
+            <button class="btn btn-dark rounded-pill px-4" disabled>Apply</button>
+          </div>
+          <a th:href="@{/order/checkout}" class="checkout-btn d-inline-block text-center">Go to Checkout →</a>
+          <a th:href="@{/foods}" class="btn btn-outline-secondary rounded-pill w-100 mt-2">Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

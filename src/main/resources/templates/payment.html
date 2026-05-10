@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Checkout & Pay - FoodieGo')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="container py-5">
+  <h2 class="mb-4">💳 Checkout & Payment</h2>
+  <form method="post"
+        th:action="${buyNow != null and buyNow} ? @{/order/buy-now/place} : @{/order/place}"
+        class="row g-4">
+
+    <div class="col-lg-7">
+      <div class="dash-card">
+        <h5 class="mb-3">📍 Delivery Location Pin</h5>
+        <p class="text-muted small">Use the Google map pin when an API key is configured, or type GPS coordinates/use current location. After you press “Add this location,” the route from the restaurant to your delivery point updates automatically.</p>
+        <div class="mb-3"><label>Full Address</label><textarea class="form-control" id="deliveryAddress" name="address" rows="2" required></textarea></div>
+        <div class="mb-3"><label>City</label><input class="form-control" name="city" id="deliveryCity" required></div>
+
+        <div id="deliveryPinMap" class="map-pin-canvas w-100 rounded mb-3"></div>
+        <div class="row g-2 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label small">Latitude</label>
+            <input type="number" step="any" class="form-control" id="customerLatitude" name="customerLatitude" placeholder="e.g. 6.927079">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Longitude</label>
+            <input type="number" step="any" class="form-control" id="customerLongitude" name="customerLongitude" placeholder="e.g. 79.861244">
+          </div>
+          <div class="col-md-4 d-grid gap-2">
+            <button type="button" class="btn btn-brand btn-sm" id="addDeliveryPin">Add this location</button>
+            <button type="button" class="btn btn-outline-brand btn-sm" id="useDeliveryLocation">Use my current location</button>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3 mb-2">
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="useTypedDeliveryAddress">Use typed address for route</button>
+          <a target="_blank" class="btn btn-outline-secondary btn-sm" id="openRouteLink" href="https://www.google.com/maps">Open route in Google Maps ↗</a>
+        </div>
+        <small class="text-muted d-block mb-2" id="deliveryCoordText">No delivery pin selected yet.</small>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">🏪 Store Location</label>
+            <iframe class="location-preview-map w-100 rounded" style="height:210px" loading="lazy" th:src="${storeMapEmbedUrl}"></iframe>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">🧭 Automatic Route Preview</label>
+            <iframe id="routeMap" class="location-preview-map w-100 rounded" style="height:210px" loading="lazy"
+                    th:attr="data-store-query=${storeMapQuery}"
+                    th:src="${storeMapEmbedUrl}"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card mt-3">
+        <h5 class="mb-3">💳 Card Details (dummy)</h5>
+        <div class="mb-3"><label>Cardholder Name</label><input class="form-control" name="cardName" required></div>
+        <div class="mb-3"><label>Card Number</label><input class="form-control" name="cardNumber" placeholder="1234 5678 9012 3456" required></div>
+        <div class="row">
+          <div class="col"><label>Expiry</label><input class="form-control" name="cardExpiry" placeholder="MM/YY" required></div>
+          <div class="col"><label>CVV</label><input class="form-control" name="cardCvv" maxlength="4" required></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="dash-card sticky-lg-top" style="top:92px">
+        <h5>🛒 Order Summary</h5>
+        <p class="text-muted mb-2" th:if="${restaurant != null}">From: <strong th:text="${restaurant.name}"></strong> (<span th:text="${restaurant.city}"></span>)</p>
+        <ul class="list-unstyled">
+          <li th:each="i : ${items}" class="d-flex justify-content-between gap-3">
+            <span><span th:text="${i.foodName}"></span> × <span th:text="${i.quantity}"></span></span>
+            <span>Rs. <span th:text="${#numbers.formatDecimal(i.subtotal,1,2)}"></span></span>
+          </li>
+        </ul>
+        <hr>
+        <div class="d-flex justify-content-between"><span>Subtotal</span><span>Rs. <span th:text="${#numbers.formatDecimal(subtotal,1,2)}"></span></span></div>
+        <div class="d-flex justify-content-between"><span>🛵 Delivery</span><span>Rs. 150.00 / 350.00</span></div>
+        <hr>
+        <p class="small text-muted">Final delivery fee depends on the city you enter above. The saved pin and route are stored with the order for riders.</p>
+        <button class="btn btn-brand w-100">Pay Now 💸</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>
